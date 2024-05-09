@@ -11,6 +11,17 @@ public:
 
     // more functions to be added perhaps...
 
+    // Display the menu items/linked list
+    void displayList();
+
+    // Remove item from the menu linked list
+    void removeMenuItem(int index);
+
+    // Add item to the back of the menu linked list
+    void addBackMenuItem(FoodItem* foodItem);
+
+    // Save state of user upon exiting the program
+
 private:
     // the beginning of the list
     Node* head;
