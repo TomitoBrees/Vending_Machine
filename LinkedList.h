@@ -11,11 +11,17 @@ public:
 
     // more functions to be added perhaps...
 
+    // Get the size of the linked list
+    int size();
+
     // Display the menu items/linked list
     void displayList();
 
+    // Get the item at the given index
+    FoodItem* get(int index);
+
     // Remove item from the menu linked list
-    void removeMenuItem(int index);
+    void removeMenuItem(FoodItem* foodItem);
 
     // Add item to the back of the menu linked list
     void addBackMenuItem(FoodItem* foodItem);
@@ -25,9 +31,6 @@ public:
 private:
     // the beginning of the list
     Node* head;
-  
-    // how many nodes are there in the list?
-    unsigned count;
 };
 
 #endif  // LINKEDLIST_H

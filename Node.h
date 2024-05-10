@@ -31,8 +31,13 @@
 class Price
 {
 public:
+    Price(unsigned dollar, unsigned cents);
+
     // The dollar value, and the cents value for some price
     unsigned dollars, cents;
+
+    // Get the price of the product as a string
+    std::string displayPrice();
 };
 
 /**
@@ -41,6 +46,8 @@ public:
 class FoodItem
 {
 public:
+    FoodItem(std::string id, std::string name, std::string description, Price* price, unsigned on_hand);
+
     //the unique id for this food item
     std::string id;
 
@@ -51,10 +58,10 @@ public:
     std::string description;
     
     //the price of this food item
-    Price price;
+    Price* price;
     
     // how many of this food item do we have on hand? 
-    unsigned on_hand;    
+    unsigned on_hand;
 };
 
 /**
@@ -64,6 +71,9 @@ class Node
 {
 public:
     Node();
+
+    Node(FoodItem *data);
+
     ~Node();
     // pointer to the data held for the node 
     FoodItem* data;
