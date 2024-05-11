@@ -26,7 +26,13 @@ public:
     // Add item to the back of the menu linked list
     void addBackMenuItem(FoodItem* foodItem);
 
+    // Add item to the front of the menu linked list
+    void addFrontMenuItem(FoodItem* foodItem);
+
     // Save state of user upon exiting the program
+
+    // Read data from the files and populate the linked list
+    void loadDataFromFoodFile(const std::string& fileName);
 
 private:
     // the beginning of the list
