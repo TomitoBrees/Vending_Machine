@@ -36,31 +36,6 @@ void FoodManager::displayList() {
     }
 }
 
-void FoodManager::removeMenuItem(FoodItem* foodItem) {
-
-    Node* prev = nullptr;
-    Node* current = foodList->head;
-
-    while (current) {
-        if(current->data == foodItem) {
-            Node* next = current->next;
-
-            if(prev == nullptr) {
-                foodList->head = current;
-            }
-            else {
-                prev->next = next;
-            }
-            delete current;
-            current = next;
-        }
-        else {
-            prev = current;
-            current = current->next;
-        }
-    }
-}
-
 void FoodManager::addBackMenuItem(FoodItem* foodItem) {
     Node* current = foodList->head;
 
@@ -130,4 +105,69 @@ FoodItem* FoodManager::findFoodItemByID(const std::string& id) {
     }
     // Return nullptr if the the food item with given ID is not found
     return nullptr;
+}
+
+std::string FoodManager::generateNextID() {
+    try {
+    // Determine the current size of the linked list
+    int currentSize = foodList->size();
+
+    // Generate the next available id according the format in the foods.dat file
+    std::string nextID = "F";
+    nextID.append(std::to_string(currentSize + 1));
+
+    // Pad the id with leading 0's to make sure it's 5 characters long
+    nextID.insert(1, 5 - nextID.length(), '0');
+    return nextID;
+    }
+    catch (const std::exception& e) {
+        // Error message if there is a problem generating the next available id
+        std::cerr << "Error generating next ID: " << e.what() << std::endl;
+        throw;
+    }
+}
+
+void FoodManager::addNewFoodItem(const std::string& name, const std::string& description, double price) {
+    try {
+    // Generate the next available id for the new food item
+    std::string nextID = generateNextID();
+
+    // Create Price object
+    unsigned int dollars = static_cast<unsigned int>(price);
+    unsigned int cents = static_cast<unsigned int>((price - dollars) * 100);
+    Price* itemPrice = new Price(dollars, cents);
+    
+    // Create FoodItem object and add it to the linked list
+    FoodItem* newItem = new FoodItem(nextID, name, description, itemPrice, DEFAULT_FOOD_STOCK_LEVEL);
+    addBackMenuItem(newItem);
+    }
+    catch (const std::exception& e) {
+        // Error message if there is a problem while adding the new food item to the linked list
+        std::cerr << "Error adding new food item: " << e.what() << std::endl;
+    }
+}
+
+void FoodManager::removeMenuItem(FoodItem* foodItem) {
+    Node* prev = nullptr;
+    Node* current = foodList->head;
+
+    while (current) {
+        // Get the food item node and remove it from the linked list
+        if (current->data == foodItem) {
+            Node* next = current->next;
+
+            if (prev == nullptr) {
+                // Update the pointer to point to the next node
+                foodList->head = current->next;
+            }
+            else { 
+                prev->next = next;
+            }
+            // Print the details of the removed food item
+            FoodItem* removedItem = static_cast<FoodItem*>(current->data);
+            std::cout << "'" << removedItem->id << " - " << removedItem->name << " - " 
+            << removedItem->description << "' has been removed from the system." << std::endl;
+            delete current;
+        }
+    }
 }

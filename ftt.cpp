@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <limits>
 #include "LinkedList.h"
 #include "FoodManager.h"
 
@@ -65,10 +65,41 @@ int main(int argc, char **argv)
 
         }
         else if (s == "4") {
+            // Determine the next available id and print it
+            std::string nextID = foodManager.generateNextID();
+            std::cout << "This new meal item will have the item id of " << nextID << std::endl;
 
+            // Prompt the user for the name, description, price
+            std::string name, description;
+            double price;
+            std::cout << "Enter the item name: ";
+            std::cin.ignore();
+            std::getline(std::cin, name);
+            std::cout << "Enter the food description: ";
+            std::getline(std::cin, description);
+            std::cout << "Enter the price for this item (in cents): ";
+            std::cin >> price;
+            
+            // Add the new food item to the linked list
+            foodManager.addNewFoodItem(name, description, price);
+            std::cout << "This item " << "'" << name << " - " << description << ".' has now been added to the food menu." << std::endl;
         }
         else if (s == "5") {
+            std::cout << "Enter the food id of the food to remove from the menu: ";
+            // Clear input buffer
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::string idToRemove;
+            std::getline(std::cin, idToRemove);
 
+            // Find the food item in the linked list
+            FoodItem* itemToRemove = foodManager.findFoodItemByID(idToRemove);
+            if (itemToRemove) {
+                // If the food item with the entered id exists, remove the food item
+                foodManager.removeMenuItem(itemToRemove);
+            }
+            else {
+                std::cout << "Food item with id " << idToRemove << " not found." << std::endl;
+            }
         }
         else if (s == "6") {
 

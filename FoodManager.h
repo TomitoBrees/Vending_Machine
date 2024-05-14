@@ -32,6 +32,12 @@ public:
     // Get the food Item with the given ID.
     FoodItem* findFoodItemByID(const std::string& id);
 
+    // Generate the next available id
+    std::string generateNextID();
+
+    // Add a new food item to the food menu linked list
+    void addNewFoodItem(const std::string& name, const std::string& description, double price);
+
 private:
 
     // The food linked list handling everything related to the menu.
