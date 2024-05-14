@@ -1,11 +1,11 @@
-#include "Coin.h"
+#include "CoinManager.h"
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
 
 
-std::vector<std::vector<int>> giveChange(int cents, std::vector<std::vector<int>> availableCoins)
+std::vector<std::vector<int>> CoinManager::giveChange(int cents, std::vector<std::vector<int>> availableCoins)
 {
     int i = 0;
     std::vector<std::vector<int>> finalChange = {{5000, 0}, {2000, 0}, {1000, 0}, {500,0}, {200, 0},

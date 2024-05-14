@@ -1,8 +1,6 @@
 #ifndef NODE_H
 #define NODE_H
-#include <string> 
-#include "Coin.h"
-
+#include <string>
 
 //The length of the id string not counting the nul terminator
 #define IDLEN 5
@@ -22,6 +20,7 @@
 //The number of denominations of currency available in the system 
 #define NUM_DENOMS 8
 
+
 /**
  * a structure to represent a price. One of the problems with the floating
  * point formats in C++ like float and double is that they have minor issues
@@ -31,6 +30,8 @@
 class Price
 {
 public:
+
+    //Constructor
     Price(unsigned dollar, unsigned cents);
 
     // The dollar value, and the cents value for some price
@@ -40,12 +41,11 @@ public:
     std::string displayPrice();
 };
 
-/**
- * data structure to represent a food item within the system
- **/
 class FoodItem
 {
 public:
+
+    //Constructor
     FoodItem(std::string id, std::string name, std::string description, Price* price, unsigned on_hand);
 
     //the unique id for this food item
@@ -53,16 +53,37 @@ public:
 
     //the name of this food item
     std::string name;
-    
-    //the description of this food item   
+
+    //the description of this food item
     std::string description;
-    
+
     //the price of this food item
     Price* price;
-    
-    // how many of this food item do we have on hand? 
+
+    // how many of this food item do we have on hand?
     unsigned on_hand;
 };
+
+// enumeration representing the various types of currency available in the system.
+enum Denomination
+{
+    FIVE_CENTS, TEN_CENTS, TWENTY_CENTS, FIFTY_CENTS, ONE_DOLLAR,
+    TWO_DOLLARS, FIVE_DOLLARS, TEN_DOLLARS, TWENTY_DOLLARS
+};
+
+// The class representing the coins in our program.
+class Coin
+{
+public:
+    // the denomination type
+    enum Denomination denom;
+
+    // the count of how many of these are in the cash register
+    unsigned count;
+};
+
+// Enum to specify the type of data stored in the node
+enum NodeType { FOOD_ITEM, COIN };
 
 /**
  * the node that holds the data about a food item stored in memory
@@ -70,17 +91,21 @@ public:
 class Node
 {
 public:
+
+    //Constructor
     Node();
 
     // Constructor for food menu nodes
-    Node(FoodItem *data);
+    Node(void *data, NodeType type);
 
     ~Node();
     
     // pointer to the data held for the FoodItem node 
-    FoodItem* data;
+    void* data;
     // pointer to the next node in the list 
     Node* next;
+    //Enum to get the type of the node.
+    NodeType type;
 };
 
 #endif // NODE_H

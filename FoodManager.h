@@ -1,0 +1,43 @@
+#ifndef FOODMANAGER_H
+#define FOOMANAGER_H
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+#include "string"
+#include "LinkedList.h"
+
+class FoodManager {
+public:
+
+    //Constructor
+    FoodManager();
+
+    //Get the item at the given index in the food linked list.
+    FoodItem* get(int index);
+
+    //Display the food linked list.
+    void displayList();
+
+    //Remove an item from the food linked list.
+    void removeMenuItem(FoodItem* foodItem);
+
+    // Add an item to the food liked list.
+    void addBackMenuItem(FoodItem* foodItem);
+
+    // Load the data from the food file into the linked list.
+    void loadDataFromFoodFile(const std::string& fileName);
+
+    // Get the food Item with the given ID.
+    FoodItem* findFoodItemByID(const std::string& id);
+
+private:
+
+    // The food linked list handling everything related to the menu.
+    LinkedList* foodList;
+};
+
+
+
+#endif //FOODMANAGER_H

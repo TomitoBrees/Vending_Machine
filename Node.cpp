@@ -5,13 +5,21 @@ Node::Node(){
     next = nullptr;
 };
 
-Node::Node(FoodItem* data) {
+Node::Node(void* data, NodeType type) {
     this->data = data;
     next = nullptr;
+    this->type = type;
 }
 
 Node::~Node(){
-    delete data;
+    switch(type) {
+        case FOOD_ITEM:
+            delete static_cast<FoodItem*>(data);
+            break;
+        case COIN:
+            delete static_cast<Coin*>(data);
+            break;
+    }
     delete next;
 };
 
@@ -25,7 +33,6 @@ std::string Price::displayPrice() {
     std::string res = std::to_string(dollars) + "." + (cents < 10? "0" : "") + std::to_string(cents);
     return res;
 }
-
 
 FoodItem::FoodItem(std::string id, std::string name, std::string description, Price* price, unsigned int on_hand) {
     this->id = id;

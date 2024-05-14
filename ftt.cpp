@@ -1,5 +1,7 @@
 #include <iostream>
+
 #include "LinkedList.h"
+#include "FoodManager.h"
 
 using std::string;
 /**
@@ -14,7 +16,8 @@ int main(int argc, char **argv)
     /*Create an instance of LinkedList for the food menu,
       load data from foods.dat file into the linked list,
       reset the stock levels to the default number*/
-    LinkedList foodMenu;
+    FoodManager foodManager;
+    foodManager.loadDataFromFoodFile("foods.dat");
     string s;
     bool quit = false;
 
@@ -22,20 +25,20 @@ int main(int argc, char **argv)
     while (!quit) {
         // Display main menu
         std::cout << "Main Menu:" << std::endl;
-        std::cout << "1. Display Meal Options" << std::endl;
-        std::cout << "2. Purchase Meal" << std::endl;
-        std::cout << "3. Save and Exit" << std::endl;
-        std::cout << "Adminitstrator-Only Menu:" << std::endl;
-        std::cout << "4. Add Food" << std::endl;
-        std::cout << "5. Remove Food" << std::endl;
-        std::cout << "6. Dislay Balance" << std::endl;
-        std::cout << "7. Abort Program" << std::endl;
-        std::cout << "Select your option (1-7) :" << std::endl;
+        std::cout << "\t1. Display Meal Options" << std::endl;
+        std::cout << "\t2. Purchase Meal" << std::endl;
+        std::cout << "\t3. Save and Exit" << std::endl;
+        std::cout << "Administrator-Only Menu:" << std::endl;
+        std::cout << "\t4. Add Food" << std::endl;
+        std::cout << "\t5. Remove Food" << std::endl;
+        std::cout << "\t6. Display Balance" << std::endl;
+        std::cout << "\t7. Abort Program" << std::endl;
+        std::cout << "Select your option (1-7) : " ;
         // Read input (s) from user
         std::cin >> s;
 
         if (s == "1") {
-          foodMenu.displayList();
+          foodManager.displayList();
         }
         else if (s == "2") {
             std::cout << "Purchase Meal" << std::endl;
@@ -45,7 +48,7 @@ int main(int argc, char **argv)
             std::cin >> foodID;
 
             // Find the food item in the linked list
-            FoodItem* desiredItem = foodMenu.findFoodItemByID(foodID);
+            FoodItem* desiredItem = foodManager.findFoodItemByID(foodID);
             if (desiredItem) {
                 // Find the food item and display the details
                 std::cout << "You have selected " << "'" << desiredItem->name << " - " << desiredItem->description << "'. "
