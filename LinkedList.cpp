@@ -64,10 +64,10 @@ FoodItem* LinkedList::get(int index) {
 void LinkedList::displayList() {
     // Display the menu items
     Node* current = head;
-    std::cout << "Menu" << std::endl;
-        std::cout << "----" << std::endl;
+    std::cout << "Food Menu" << std::endl;
+        std::cout << "---------" << std::endl;
         std::cout << "ID" << "   |" << "Name" << "                                    " << "|Length" << std::endl;
-        std::cout << "------------------------------------------------------" << std::endl;
+        std::cout << "-------------------------------------------------------" << std::endl;
     while (current != nullptr) {
         std::cout << current->data->id << "|" << current->data->name << std::string(40 - current->data->name.length(), ' ') << "|$" << current->data->price->displayPrice() << std::endl;
         current = current->next;
@@ -160,4 +160,18 @@ void LinkedList::loadDataFromFoodFile(const std::string& fileName) {
     // Catch any errors while loading the data into the linked list and display and error message
     std::cerr << "Error loading data from " << fileName << ": " << e.what() << std::endl;
   }
+}
+
+// Return food item by its ID
+FoodItem* LinkedList::findFoodItemByID(const std::string& id) {
+    Node* current = head;
+    while (current) {
+        // If the ID entered matches an ID in the linked list, return pointer to that item
+        if (current->data->id == id) {
+            return current->data;
+        }
+        current = current->next;
+    }
+    // Return nullptr if the the food item with given ID is not found
+    return nullptr;
 }

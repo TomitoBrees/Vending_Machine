@@ -38,7 +38,25 @@ int main(int argc, char **argv)
           foodMenu.displayList();
         }
         else if (s == "2") {
+            std::cout << "Purchase Meal" << std::endl;
+            std::cout << "-------------" << std::endl;
+            std::cout << "Please enter the ID of the food you want to purchase:" << std::endl;
+            std::string foodID;
+            std::cin >> foodID;
 
+            // Find the food item in the linked list
+            FoodItem* desiredItem = foodMenu.findFoodItemByID(foodID);
+            if (desiredItem) {
+                // Find the food item and display the details
+                std::cout << "You have selected " << "'" << desiredItem->name << " - " << desiredItem->description << "'. "
+                          << "This will cost you $ " << desiredItem->price->displayPrice() << std::endl;
+                std::cout << "Please hand over the money - type in the value of each note/coin in cents." << std::endl;
+                std::cout << "Please enter ctrl-D or enter on a new line to cancel this purchase." << std::endl;
+            }
+            else {
+                // Display error message if the input entered is not valid or does not exist in the linked list
+                std::cout << "Error: Invalid input. Please enter a valid ID (e.g. F0001)." << std::endl;
+            }
         }
         else if (s == "3") {
 

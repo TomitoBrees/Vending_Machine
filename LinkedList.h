@@ -37,6 +37,9 @@ public:
     // Read data from foods.dat file and populate a linked list
     void loadDataFromFoodFile(const std::string& fileName);
 
+    // Return a food item from the linked list by its ID
+    FoodItem* findFoodItemByID(const std::string& id);
+
 private:
     // the beginning of the food menu list
     Node* head;
