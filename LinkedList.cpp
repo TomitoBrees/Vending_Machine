@@ -7,6 +7,16 @@
 // Constructor
 LinkedList::LinkedList() {
    head = nullptr;
+
+   // Load the data from the foods.dat file into the linked list
+   loadDataFromFoodFile("foods.dat");
+
+   // Reset stock level for all food items to the default number
+   Node* current = head;
+   while (current != nullptr) {
+    current->data->on_hand = DEFAULT_FOOD_STOCK_LEVEL;
+    current = current->next;
+   }
 }
 
 // Destructor
@@ -31,7 +41,7 @@ int LinkedList::size() {
     return res;
 }
 
-// Get the item at the given index
+// Get the item at the given index in food menu linked list
 FoodItem* LinkedList::get(int index) {
     FoodItem* res = nullptr;
 
@@ -54,12 +64,12 @@ FoodItem* LinkedList::get(int index) {
 void LinkedList::displayList() {
     // Display the menu items
     Node* current = head;
-    while (current != nullptr) {
-        std::cout << "Menu" << std::endl;
+    std::cout << "Menu" << std::endl;
         std::cout << "----" << std::endl;
-        std::cout << "ID" << "|" << "Name" << "                             " << "|Length" << std::endl;
-        std::cout << "------------------------------------------------------------------" << std::endl;
-        std::cout << current->data->id << "|" << current->data->name << "                               |$" << current->data->price->displayPrice() << std::endl;
+        std::cout << "ID" << "   |" << "Name" << "                                    " << "|Length" << std::endl;
+        std::cout << "------------------------------------------------------" << std::endl;
+    while (current != nullptr) {
+        std::cout << current->data->id << "|" << current->data->name << std::string(40 - current->data->name.length(), ' ') << "|$" << current->data->price->displayPrice() << std::endl;
         current = current->next;
     }
 }
@@ -111,31 +121,43 @@ void LinkedList::addBackMenuItem(FoodItem* foodItem) {
     current->next = new Node(foodItem);
 }
 
-// Load data from the file into a linked list
+// Load data from the foods.dat file into a linked list
 void LinkedList::loadDataFromFoodFile(const std::string& fileName) {
+    try {
     std::ifstream file(fileName);
     if (file.is_open()) {
-        std::string code, name, description, priceStr;
-        while (getline(file, code, '|') && getline(file, description, '|') && getline(file, priceStr)) {
-            // Convert price from string to double
-            double price = std::stod(priceStr);
+        std::string line;
+        while (std::getline(file, line)) {
+            std::istringstream iss (line);
+            std::string id, name, description, priceStr;
+            if (std::getline(iss, id, '|') &&
+                std::getline(iss, name, '|') &&
+                std::getline(iss, description, '|') &&
+                std::getline(iss, priceStr)) {
+                
+                // Convert price from string to double
+                double price = std::stod(priceStr);
+                // Create Price object
+                unsigned int dollars = static_cast<unsigned int>(price);
+                unsigned int cents = static_cast<unsigned int>((price - dollars) * 100);
+                Price* itemPrice = new Price(dollars, cents);
 
-            // Create Price object
-            unsigned int dollars = static_cast<unsigned int>(price);
-            unsigned int cents = static_cast<unsigned int>((price - dollars) * 100);
-            Price* itemPrice = new Price(dollars, cents);
-
-            // Create FoodItem object
-            FoodItem* item = new FoodItem(code, name, description, itemPrice, DEFAULT_FOOD_STOCK_LEVEL);
-
-            // Add the item to the linked list
-            addFrontMenuItem(item);
+                // Create FoodItem object
+                FoodItem* item = new FoodItem(id, name, description, itemPrice, DEFAULT_FOOD_STOCK_LEVEL);
+                // Add the item to the linked list
+                addBackMenuItem(item);
+            }
         }
         // Close the file
         file.close();
     }
     else {
-        // Error message if unable to read from file
-        std::cout << "Unable to open file: " << fileName << std::endl;
+        // Error message if unable to open file
+        throw std::runtime_error("Unable to open file: " + fileName);
     }
+  }
+  catch (const std::exception& e) {
+    // Catch any errors while loading the data into the linked list and display and error message
+    std::cerr << "Error loading data from " << fileName << ": " << e.what() << std::endl;
+  }
 }

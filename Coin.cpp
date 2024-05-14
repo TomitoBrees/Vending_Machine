@@ -40,15 +40,15 @@ std::vector<std::vector<int>> giveChange(int cents, std::vector<std::vector<int>
     return finalChange;
 }
 
- int main()
- {
-     int cents = 12500;
-     std::vector<std::vector<int>> availableCoins = {{5000, 1}, {2000, 4}, {1000, 4}, {500,5}, {200, 6},
-                                                     {100, 3}, {50, 0}, {20, 0}, {10, 0}, {5, 0}};
-     std::vector<std::vector<int>> finalChange = giveChange(cents, availableCoins);
-    std::cout << finalChange[0][1] << finalChange[1][1] << finalChange[2][1] << finalChange[3][1] << std::endl;
-    return EXIT_SUCCESS;
- }
+ //int main()
+ //{
+   //  int cents = 12500;
+     //std::vector<std::vector<int>> availableCoins = {{5000, 1}, {2000, 4}, {1000, 4}, {500,5}, {200, 6},
+      //                                               {100, 3}, {50, 0}, {20, 0}, {10, 0}, {5, 0}};
+    //std::vector<std::vector<int>> finalChange = giveChange(cents, availableCoins);
+    //std::cout << finalChange[0][1] << finalChange[1][1] << finalChange[2][1] << finalChange[3][1] << std::endl;
+    //return EXIT_SUCCESS;
+ //}
 
 
 

@@ -21,7 +21,8 @@ Price::Price(unsigned int dollars, unsigned int cents) {
 }
 
 std::string Price::displayPrice() {
-    std::string res = std::to_string(dollars) + "." + std::to_string(cents);
+    // Display dollars and cents. Ensure that the cents are always 2 decimal points
+    std::string res = std::to_string(dollars) + "." + (cents < 10? "0" : "") + std::to_string(cents);
     return res;
 }
 

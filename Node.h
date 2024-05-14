@@ -72,10 +72,12 @@ class Node
 public:
     Node();
 
+    // Constructor for food menu nodes
     Node(FoodItem *data);
 
     ~Node();
-    // pointer to the data held for the node 
+    
+    // pointer to the data held for the FoodItem node 
     FoodItem* data;
     // pointer to the next node in the list 
     Node* next;

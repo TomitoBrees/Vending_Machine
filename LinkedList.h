@@ -17,8 +17,11 @@ public:
     // Display the menu items/linked list
     void displayList();
 
-    // Get the item at the given index
+    // Get the item at the given index in food menu linked list
     FoodItem* get(int index);
+
+    // Get item at the given index in coin linked list
+    Coin* getCoin(int value);
 
     // Remove item from the menu linked list
     void removeMenuItem(FoodItem* foodItem);
@@ -31,11 +34,11 @@ public:
 
     // Save state of user upon exiting the program
 
-    // Read data from the files and populate the linked list
+    // Read data from foods.dat file and populate a linked list
     void loadDataFromFoodFile(const std::string& fileName);
 
 private:
-    // the beginning of the list
+    // the beginning of the food menu list
     Node* head;
 };
 
