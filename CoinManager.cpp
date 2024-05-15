@@ -4,6 +4,13 @@
 #include <cstdlib>
 #include <vector>
 
+CoinManager::CoinManager() {
+    coinList = new LinkedList();
+}
+
+CoinManager::~CoinManager() {
+    delete coinList;
+}
 
 std::vector<std::vector<int>> CoinManager::giveChange(int cents, std::vector<std::vector<int>> availableCoins)
 {
