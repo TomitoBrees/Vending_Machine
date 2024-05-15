@@ -28,7 +28,7 @@ void CoinManager::addBackCoin(Coin* coin) {
     current->next = new Node(coin, COIN);
 }
 
-Denomination intToDenomination(int value) {
+Denomination CoinManager::intToDenomination(int value) {
     Denomination result;
     if (value == 5000) {
         result = FIFTY_DOLLARS;
@@ -63,7 +63,7 @@ Denomination intToDenomination(int value) {
     return result;
 }
 
-void loadDataFromCoinFile(const std::string& fileName) {
+void CoinManager::loadDataFromCoinFile(const std::string& fileName) {
     try {
         std::ifstream file(fileName);
         if (file.is_open()) {
