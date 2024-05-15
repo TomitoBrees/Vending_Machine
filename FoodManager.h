@@ -1,5 +1,5 @@
 #ifndef FOODMANAGER_H
-#define FOOMANAGER_H
+#define FOODMANAGER_H
 
 #include <iostream>
 #include <fstream>

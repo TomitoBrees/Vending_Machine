@@ -68,13 +68,16 @@ public:
 enum Denomination
 {
     FIVE_CENTS, TEN_CENTS, TWENTY_CENTS, FIFTY_CENTS, ONE_DOLLAR,
-    TWO_DOLLARS, FIVE_DOLLARS, TEN_DOLLARS, TWENTY_DOLLARS
+    TWO_DOLLARS, FIVE_DOLLARS, TEN_DOLLARS, TWENTY_DOLLARS, FIFTY_DOLLARS
 };
 
 // The class representing the coins in our program.
 class Coin
 {
 public:
+
+    Coin(Denomination denom, unsigned count);
+
     // the denomination type
     enum Denomination denom;
 
@@ -100,7 +103,7 @@ public:
 
     ~Node();
     
-    // pointer to the data held for the FoodItem node 
+    // pointer to the data head for the FoodItem node
     void* data;
     // pointer to the next node in the list 
     Node* next;

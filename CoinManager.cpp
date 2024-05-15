@@ -12,6 +12,93 @@ CoinManager::~CoinManager() {
     delete coinList;
 }
 
+
+void CoinManager::addBackCoin(Coin* coin) {
+    Node* current = coinList->head;
+
+    if(!coinList->head) {
+        coinList->head = new Node(coin, COIN);
+        return;
+    }
+
+    while(current->next) {
+        current = current->next;
+    }
+
+    current->next = new Node(coin, COIN);
+}
+
+Denomination intToDenomination(int value) {
+    Denomination result;
+    if (value == 5000) {
+        result = FIFTY_DOLLARS;
+    }
+    else if (value == 2000) {
+        result = TWENTY_DOLLARS;
+    }
+    else if (value == 1000) {
+        result = TEN_DOLLARS;
+    }
+    else if (value == 500) {
+        result = FIVE_DOLLARS;
+    }
+    else if (value == 200) {
+        result = TWO_DOLLARS;
+    }
+    else if (value == 100) {
+        result = ONE_DOLLAR;
+    }
+    else if (value == 50) {
+        result = FIFTY_CENTS;
+    }
+    else if (value == 20) {
+        result = TWENTY_CENTS;
+    }
+    else if (value == 10) {
+        result = TEN_CENTS;
+    }
+    else {
+        result = FIVE_CENTS;
+    }
+    return result;
+}
+
+void loadDataFromCoinFile(const std::string& fileName) {
+    try {
+        std::ifstream file(fileName);
+        if (file.is_open()) {
+            std::string line;
+            while (std::getline(file, line)) {
+                std::istringstream iss (line);
+                std::string denomination, quantity;
+                if (std::getline(iss, denomination, ',') &&
+                    std::getline(iss, quantity)) {
+
+                    // Convert coin value from string to double
+                    int value = std::stoi(denomination);
+                    unsigned int _quantity = std::stoi(quantity);
+                    // Create Price object
+                    Denomination _coin = intToDenomination(value);
+                    Coin* coin = new Coin(_coin, _quantity);
+
+                    addBackCoin(coin);
+                }
+            }
+            // Close the file
+            file.close();
+        }
+        else {
+            // Error message if unable to open file
+            throw std::runtime_error("Unable to open file: " + fileName);
+        }
+    }
+    catch (const std::exception& e) {
+        // Catch any errors while loading the data into the linked list and display and error message
+        std::cerr << "Error loading data from " << fileName << ": " << e.what() << std::endl;
+    }
+}
+
+
 std::vector<std::vector<int>> CoinManager::giveChange(int cents, std::vector<std::vector<int>> availableCoins)
 {
     int i = 0;

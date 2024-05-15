@@ -43,3 +43,8 @@ FoodItem::FoodItem(std::string id, std::string name, std::string description, Pr
     this->price = price;
     this->on_hand = on_hand;
 }
+
+Coin::Coin(Denomination denom, unsigned count) {
+    this->denom = denom;
+    this->count = count;
+}
