@@ -14,6 +14,9 @@ public:
     //Constructor
     FoodManager();
 
+    //Destructor
+    ~FoodManager();
+
     //Get the item at the given index in the food linked list.
     FoodItem* get(int index);
 
@@ -28,6 +31,9 @@ public:
 
     // Load the data from the food file into the linked list.
     void loadDataFromFoodFile(const std::string& fileName);
+
+    // Save the food linked list data to the wanted file.
+    void saveDataToFile(const std::string& fileName);
 
     // Get the food Item with the given ID.
     FoodItem* findFoodItemByID(const std::string& id);

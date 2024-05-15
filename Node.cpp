@@ -3,6 +3,7 @@
 Node::Node(){
     data = nullptr;
     next = nullptr;
+    type = NONE;
 };
 
 Node::Node(void* data, NodeType type) {
@@ -19,9 +20,10 @@ Node::~Node(){
         case COIN:
             delete static_cast<Coin*>(data);
             break;
+        default:
+            break;
     }
-    delete next;
-};
+}
 
 Price::Price(unsigned int dollars, unsigned int cents) {
     this->dollars = dollars;

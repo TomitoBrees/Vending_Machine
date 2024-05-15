@@ -16,8 +16,8 @@ int main(int argc, char **argv)
     /*Create an instance of LinkedList for the food menu,
       load data from foods.dat file into the linked list,
       reset the stock levels to the default number*/
-    FoodManager foodManager;
-    foodManager.loadDataFromFoodFile("foods.dat");
+    FoodManager* foodManager = new FoodManager();
+    foodManager->loadDataFromFoodFile("foods.dat");
     string s;
     bool quit = false;
 
@@ -38,17 +38,19 @@ int main(int argc, char **argv)
         std::cin >> s;
 
         if (s == "1") {
-          foodManager.displayList();
+            std::cout << std::endl;
+            foodManager->displayList();
+            std::cout << std::endl;
         }
         else if (s == "2") {
             std::cout << "Purchase Meal" << std::endl;
             std::cout << "-------------" << std::endl;
-            std::cout << "Please enter the ID of the food you want to purchase:" << std::endl;
+            std::cout << "Please enter the ID of the food you want to purchase: ";
             std::string foodID;
             std::cin >> foodID;
 
             // Find the food item in the linked list
-            FoodItem* desiredItem = foodManager.findFoodItemByID(foodID);
+            FoodItem* desiredItem = foodManager->findFoodItemByID(foodID);
             if (desiredItem) {
                 // Find the food item and display the details
                 std::cout << "You have selected " << "'" << desiredItem->name << " - " << desiredItem->description << "'. "
@@ -62,11 +64,13 @@ int main(int argc, char **argv)
             }
         }
         else if (s == "3") {
-
+            foodManager->saveDataToFile("test.dat");
+            delete foodManager;
+            return EXIT_SUCCESS;
         }
         else if (s == "4") {
             // Determine the next available id and print it
-            std::string nextID = foodManager.generateNextID();
+            std::string nextID = foodManager->generateNextID();
             std::cout << "This new meal item will have the item id of " << nextID << std::endl;
 
             // Prompt the user for the name, description, price
@@ -81,21 +85,21 @@ int main(int argc, char **argv)
             std::cin >> price;
             
             // Add the new food item to the linked list
-            foodManager.addNewFoodItem(name, description, price);
+            foodManager->addNewFoodItem(name, description, price);
             std::cout << "This item " << "'" << name << " - " << description << ".' has now been added to the food menu." << std::endl;
         }
         else if (s == "5") {
             std::cout << "Enter the food id of the food to remove from the menu: ";
-            // Clear input buffer
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
             std::string idToRemove;
-            std::getline(std::cin, idToRemove);
+            std::cin >> idToRemove;
 
             // Find the food item in the linked list
-            FoodItem* itemToRemove = foodManager.findFoodItemByID(idToRemove);
+            FoodItem* itemToRemove = foodManager->findFoodItemByID(idToRemove);
+
             if (itemToRemove) {
                 // If the food item with the entered id exists, remove the food item
-                foodManager.removeMenuItem(itemToRemove);
+                foodManager->removeMenuItem(itemToRemove);
             }
             else {
                 std::cout << "Food item with id " << idToRemove << " not found." << std::endl;

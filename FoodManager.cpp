@@ -4,6 +4,10 @@ FoodManager::FoodManager() {
     foodList = new LinkedList();
 }
 
+FoodManager::~FoodManager() {
+    delete foodList;
+}
+
 FoodItem* FoodManager::get(int index) {
     FoodItem* res = nullptr;
 
@@ -92,6 +96,26 @@ void FoodManager::loadDataFromFoodFile(const std::string& fileName) {
     }
 }
 
+void FoodManager::saveDataToFile(const std::string& fileName) {
+    try {
+        std::ofstream file(fileName);
+        Node* current = foodList->head;
+
+        while(current) {
+            FoodItem* currentItem = static_cast<FoodItem*>(current->data);
+            file << currentItem->id << "|" << currentItem->name << "|" << currentItem->description << "|" << currentItem->price->displayPrice() << std::endl;
+
+            current = current->next;
+        }
+
+        file.close();
+    }
+    catch (const std::exception &e) {
+        // Catch any errors while loading the data into the linked list and display and error message
+        std::cerr << "Error writing data to " << fileName << ": " << e.what() << std::endl;
+    }
+}
+
 
 FoodItem* FoodManager::findFoodItemByID(const std::string& id) {
     Node* current = foodList->head;
@@ -158,16 +182,23 @@ void FoodManager::removeMenuItem(FoodItem* foodItem) {
 
             if (prev == nullptr) {
                 // Update the pointer to point to the next node
-                foodList->head = current->next;
+                foodList->head = next;
             }
             else { 
                 prev->next = next;
             }
+
             // Print the details of the removed food item
             FoodItem* removedItem = static_cast<FoodItem*>(current->data);
             std::cout << "'" << removedItem->id << " - " << removedItem->name << " - " 
             << removedItem->description << "' has been removed from the system." << std::endl;
+            std::cout << std::endl;
             delete current;
+            return;
+        }
+        else {
+            prev = current;
+            current = current->next;
         }
     }
 }

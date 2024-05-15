@@ -83,7 +83,7 @@ public:
 };
 
 // Enum to specify the type of data stored in the node
-enum NodeType { FOOD_ITEM, COIN };
+enum NodeType { FOOD_ITEM, COIN, NONE };
 
 /**
  * the node that holds the data about a food item stored in memory
