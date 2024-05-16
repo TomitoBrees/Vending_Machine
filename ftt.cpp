@@ -2,6 +2,7 @@
 #include <limits>
 #include "LinkedList.h"
 #include "FoodManager.h"
+#include "CoinManager.h"
 
 using std::string;
 /**
@@ -13,11 +14,15 @@ int main(int argc, char **argv)
 {
     /* validate command line arguments */
     // TODO
-    /*Create an instance of LinkedList for the food menu,
-      load data from foods.dat file into the linked list,
-      reset the stock levels to the default number*/
+    /*Create an instance of FoodManager,
+      load data from foods.dat file into the linked list*/
     FoodManager* foodManager = new FoodManager();
     foodManager->loadDataFromFoodFile("foods.dat");
+    /*Create an instance of CoinManager,
+      load data from the coins.dat file into the linked list*/
+    CoinManager* coinManager = new CoinManager();
+    coinManager->loadDataFromCoinFile("coins.dat");
+
     string s;
     bool quit = false;
 
