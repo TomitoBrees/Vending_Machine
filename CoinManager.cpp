@@ -12,7 +12,6 @@ CoinManager::~CoinManager() {
     delete coinList;
 }
 
-
 void CoinManager::addBackCoin(Coin* coin) {
     Node* current = coinList->head;
 

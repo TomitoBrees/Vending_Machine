@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 
             // Prompt the user for the name, description, price
             std::string name, description;
-            double price;
+            int price;
             std::cout << "Enter the item name: ";
             std::cin.ignore();
             std::getline(std::cin, name);

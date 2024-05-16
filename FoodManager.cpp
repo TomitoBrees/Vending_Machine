@@ -151,14 +151,14 @@ std::string FoodManager::generateNextID() {
     }
 }
 
-void FoodManager::addNewFoodItem(const std::string& name, const std::string& description, double price) {
+void FoodManager::addNewFoodItem(const std::string& name, const std::string& description, int price) {
     try {
     // Generate the next available id for the new food item
     std::string nextID = generateNextID();
 
     // Create Price object
-    unsigned int dollars = static_cast<unsigned int>(price);
-    unsigned int cents = static_cast<unsigned int>((price - dollars) * 100);
+    unsigned int cents = static_cast<unsigned int>(price % 100);
+    unsigned int dollars = static_cast<unsigned int>((price - cents) / 100);
     Price* itemPrice = new Price(dollars, cents);
     
     // Create FoodItem object and add it to the linked list

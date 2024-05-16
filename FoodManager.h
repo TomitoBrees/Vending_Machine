@@ -42,7 +42,7 @@ public:
     std::string generateNextID();
 
     // Add a new food item to the food menu linked list
-    void addNewFoodItem(const std::string& name, const std::string& description, double price);
+    void addNewFoodItem(const std::string& name, const std::string& description, int price);
 
 private:
 
