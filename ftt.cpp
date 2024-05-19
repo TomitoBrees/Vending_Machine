@@ -78,7 +78,7 @@ int main(int argc, char **argv)
             std::string nextID = foodManager->generateNextID();
             std::cout << "This new meal item will have the item id of " << nextID << std::endl;
 
-            // Prompt the user for the name, description, price
+            // Prompt the user for the name, description
             std::string name, description;
             int price;
             std::cout << "Enter the item name: ";
@@ -86,8 +86,21 @@ int main(int argc, char **argv)
             std::getline(std::cin, name);
             std::cout << "Enter the food description: ";
             std::getline(std::cin, description);
+
+            // Add new price if the user enters a valid integer
+            bool validInput;
+            do {
             std::cout << "Enter the price for this item (in cents): ";
             std::cin >> price;
+            validInput = !std::cin.fail();
+            if (!validInput) {
+                // Clear the error flag on cin
+                std::cin.clear();
+                // Ignore the rest of the input until a newline
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Invalid price. Please enter a valid price in cents." << std::endl;
+              }
+            } while (!validInput);
             
             // Add the new food item to the linked list
             foodManager->addNewFoodItem(name, description, price);

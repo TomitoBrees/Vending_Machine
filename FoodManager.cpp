@@ -34,7 +34,9 @@ void FoodManager::displayList() {
     std::cout << "ID" << "   |" << "Name" << "                                    " << "|Length" << std::endl;
     std::cout << "-------------------------------------------------------" << std::endl;
     while (current != nullptr) {
+        // Cast the attributes of every foodItem object to the values specified in the FoodItem class
         FoodItem* foodItem = static_cast<FoodItem*>(current->data);
+        // Print the attributes of each foodItem object, line by line, in the specified format
         std::cout << foodItem->id << "|" << foodItem->name << std::string(40 - foodItem->name.length(), ' ') << "|$" << foodItem->price->displayPrice() << std::endl;
         current = current->next;
     }
@@ -202,3 +204,4 @@ void FoodManager::removeMenuItem(FoodItem* foodItem) {
         }
     }
 }
+
