@@ -44,6 +44,9 @@ public:
     // Add a new food item to the food menu linked list
     void addNewFoodItem(const std::string& name, const std::string& description, int price);
 
+    // Decrement the default food stock level by 1
+    void decrementStockLevel(FoodItem* foodItem);
+
 private:
 
     // The food linked list handling everything related to the menu.

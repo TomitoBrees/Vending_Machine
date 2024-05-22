@@ -14,14 +14,21 @@ int main(int argc, char **argv)
 {
     /* validate command line arguments */
     // TODO
-    /*Create an instance of FoodManager,
-      load data from foods.dat file into the linked list*/
+    // Create an instance of foodManager and CoinManager
     FoodManager* foodManager = new FoodManager();
-    foodManager->loadDataFromFoodFile("foods.dat");
-    /*Create an instance of CoinManager,
-      load data from the coins.dat file into the linked list*/
     CoinManager* coinManager = new CoinManager();
-    coinManager->loadDataFromCoinFile("coins.dat");
+    // If the user provides 3 arguments to run the program
+    if (argc == 3) {
+    // Load data from food file and coins file as specified in arguments
+    std::string food_file = std::string(argv[1]);
+    std::string coin_file = std::string(argv[2]);
+    foodManager->loadDataFromFoodFile(food_file);
+    coinManager->loadDataFromCoinFile(coin_file);
+    }
+    else {
+        // Invlaid number of arguments
+        std::cerr << "Error: invalid arguments" << std::endl;
+    }
 
     string s;
     bool quit = false;
@@ -128,6 +135,8 @@ int main(int argc, char **argv)
         }
         else if (s == "7") {
             quit = true;
+            delete foodManager;
+            delete coinManager;
         }
         else {
             std::cout << "Invalid input. Please enter a valid option." << std::endl;
