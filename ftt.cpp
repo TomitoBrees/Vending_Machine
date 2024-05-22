@@ -69,6 +69,7 @@ int main(int argc, char **argv)
                           << "This will cost you $ " << desiredItem->price->displayPrice() << std::endl;
                 std::cout << "Please hand over the money - type in the value of each note/coin in cents." << std::endl;
                 std::cout << "Please enter ctrl-D or enter on a new line to cancel this purchase." << std::endl;
+                coinManager->buyItem(desiredItem->price->priceToInt());
             }
             else {
                 // Display error message if the input entered is not valid or does not exist in the linked list
@@ -76,8 +77,10 @@ int main(int argc, char **argv)
             }
         }
         else if (s == "3") {
-            foodManager->saveDataToFile("test.dat");
+            foodManager->saveDataToFile("new_food.dat");
+            coinManager->saveDataToFile("new_coin.dat");
             delete foodManager;
+            delete coinManager;
             return EXIT_SUCCESS;
         }
         else if (s == "4") {
@@ -131,7 +134,9 @@ int main(int argc, char **argv)
             }
         }
         else if (s == "6") {
-
+            std::cout << std::endl;
+            coinManager->displayBalance();
+            std::cout << std::endl;
         }
         else if (s == "7") {
             quit = true;
