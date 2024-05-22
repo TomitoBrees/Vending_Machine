@@ -1,43 +1,49 @@
+#include <limits>
 #include "CoinManager.h"
-#include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <vector>
+
 
 CoinManager::CoinManager() {
-    coinListAscending = new LinkedList();
-    coinListDescending = new LinkedList();
+    coinVector = new std::vector<Coin*>;
 }
 
 CoinManager::~CoinManager() {
-    delete coinListAscending;
-    delete coinListDescending;
+
+    delete coinVector;
 }
 
-void CoinManager::addBackCoin(Coin* coin) {
-    Node* current = coinListAscending->head;
+void CoinManager::addCoin(Denomination denomination) {
 
-    if(!coinListDescending->head) {
-        coinListDescending->head = new Node(coin, COIN);
-        return;
+    for (size_t i = 0; i < coinVector->size(); i++) {
+        Coin* current_coin = (*coinVector)[i];
+        if (current_coin->denom == denomination) {
+            current_coin->count += 1;
+            return;
+        }
     }
-
-    while(current->next) {
-        current = current->next;
-    }
-
-    current->next = new Node(coin, COIN);
+    std::cout << "You cannot add this change" << std::endl;
 }
 
-
-void CoinManager::addFront(Coin* coin) {
-    Node* inter = new Node(coin, COIN);
-    inter->next = coinListAscending->head;
-    coinListAscending->head = inter;
+void CoinManager::removeCoin(Denomination denomination)
+{
+    for (size_t i = 0; i < coinVector->size(); i++) {
+        Coin* current_coin = (*coinVector)[i];
+        if (current_coin->denom == denomination) {
+            if(current_coin->count >= 1) {
+                current_coin->count -= 1;
+            }
+            else {
+                std::cout << "You don't have enough of these coins to give back" << std::endl;
+            }
+            return;
+        }
+    }
+    std::cout << "You cannot give this change" << std::endl;
 }
 
 Denomination CoinManager::intToDenomination(int value) {
-    Denomination result;
+
+    Denomination result = WRONG;
+
     if (value == 5000) {
         result = FIFTY_DOLLARS;
     }
@@ -65,9 +71,10 @@ Denomination CoinManager::intToDenomination(int value) {
     else if (value == 10) {
         result = TEN_CENTS;
     }
-    else {
+    else if (value == 5) {
         result = FIVE_CENTS;
     }
+
     return result;
 }
 
@@ -115,6 +122,7 @@ int CoinManager::denominationToInt(Denomination value) {
     {
         result = 5000;
     }
+
     return result;
 }
 
@@ -136,8 +144,7 @@ void CoinManager::loadDataFromCoinFile(const std::string& fileName) {
                     Denomination _coin = intToDenomination(value);
                     Coin* coin = new Coin(_coin, _quantity);
 
-                    addFront(coin);
-                    addBackCoin(coin);
+                    coinVector->insert(coinVector->begin(),coin);
                 }
             }
             // Close the file
@@ -151,6 +158,22 @@ void CoinManager::loadDataFromCoinFile(const std::string& fileName) {
     catch (const std::exception& e) {
         // Catch any errors while loading the data into the linked list and display and error message
         std::cerr << "Error loading data from " << fileName << ": " << e.what() << std::endl;
+    }
+}
+
+void CoinManager::saveDataToFile(const std::string& fileName) {
+    try {
+        std::ofstream file(fileName);
+        for (size_t i = coinVector->size() - 1; i > 0; i--) {
+            Coin* currentItem = (*coinVector)[i];
+            file << denominationToInt(currentItem->denom) << "," << currentItem->count << std::endl;
+        }
+
+        file.close();
+    }
+    catch (const std::exception &e) {
+        // Catch any errors while loading the data into the linked list and display and error message
+        std::cerr << "Error writing data to " << fileName << ": " << e.what() << std::endl;
     }
 }
 
@@ -201,13 +224,13 @@ void CoinManager::displayBalance() {
 
     int denomination;
     unsigned int quantity;
-    int index = 0;
     float total = 0;
-    Node* current = coinListAscending->head;
+    int index = 0;
 
-    while (current && index < 10) {
+    for (size_t i = 0; i < coinVector->size() && index < 10; ++i) {
+        Coin* currentCoin = (*coinVector)[i];
         index += 1;
-        Coin* currentCoin = static_cast<Coin*>(current->data);
+
         Denomination _denomination = currentCoin->denom;
         denomination = denominationToInt(_denomination);
         quantity = currentCoin->count;
@@ -224,17 +247,13 @@ void CoinManager::displayBalance() {
 
         if (size == 1)
             tab += "  ";
-
-        else if (size == 2) {
+        else if (size == 2)
             tab += " ";
-        }
 
         tab += s;
-
         std::cout << "|" << tab << std::endl;
 
         total += value;
-        current = current->next;
     }
     std::cout << "---------------------------" << std::endl;
 
@@ -245,12 +264,75 @@ void CoinManager::displayBalance() {
     std::cout << "                   $ " << s2 << std::endl;
 }
 
-//int main() {
-    //CoinManager* coinManager = new CoinManager();
-    //coinManager->loadDataFromCoinFile("coins.dat");
-    //coinManager->displayBalance();
-//}
+void CoinManager::buyItem(int toPay) {
+    bool paid = false;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear input buffer
 
+    std::vector<Coin*> recolted_change;
 
+    while(!paid) {
 
+        std::cout << "You still need to give us $ " << toPay << " : ";
 
+        std::string input;
+        std::getline(std::cin, input);
+        std::stringstream ss(input);
+
+        if (input.empty()) {
+
+            if(!recolted_change.empty()) {
+                for (size_t i = 0; i < recolted_change.size(); i++) {
+                    removeCoin(recolted_change[i]->denom);
+                }
+            }
+
+            return;
+        }
+
+        int given;
+
+        if (!(ss >> given)) {
+            // Invalid input, clear the stream and try again
+            std::cin.clear();
+            std::cout << "Invalid input. Please enter a valid amount." << std::endl;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore remaining characters
+            continue;
+        }
+
+        Denomination toAdd = intToDenomination(given);
+        if (toAdd == WRONG) {
+            std::cout << "Invalid denomination. Please enter a valid coin value." << std::endl;
+            continue;
+        }
+
+        recolted_change.push_back(new Coin(toAdd, 1));
+
+        addCoin(toAdd);
+
+        toPay -= given;
+
+        if (toPay <= 0) {
+            paid = true;
+        }
+    }
+
+    if (toPay < 0) {
+        for (size_t i = coinVector->size() - 1; i >= 0 && toPay != 0; --i) {
+            int coinValue = denominationToInt((*coinVector)[i]->denom);
+            int coinCount = (*coinVector)[i]->count;
+            if (coinValue <= std::abs(toPay) && coinCount > 0) {
+                int numCoinsToUse = std::min(coinCount, std::abs(toPay) / coinValue);
+                (*coinVector)[i]->count -= numCoinsToUse;
+                toPay += numCoinsToUse * coinValue;
+
+                for (int j = 0; j < numCoinsToUse; j++) {
+                    removeCoin(intToDenomination(coinValue));
+                }
+
+                std::cout << "Used " << numCoinsToUse << " coins of value " << coinValue << std::endl;
+            }
+        }
+    }
+
+    std::cout << " " << std::endl;
+}

@@ -3,11 +3,15 @@
 
 // CoinManager.h defines the coin structure for managing currency in the system.
 #include <vector>
-#include "LinkedList.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "string"
+#include <string>
+#include <cstdio>
+#include <cstdlib>
+#include <iomanip>
+
+#include "LinkedList.h"
 
 #define DELIM ","  // delimiter
 
@@ -23,13 +27,16 @@ public:
     //Destructor
     ~CoinManager();
 
-    // Add an item to the food liked list.
-    void addBackCoin(Coin* coin);
+    // Increment the count of a coin
+    void addCoin(Denomination denomination);
 
-    void addFront(Coin* coin);
+    void removeCoin(Denomination denomination);
+
 
     // Load the data from the coin file into the linked list.
     void loadDataFromCoinFile(const std::string& fileName);
+
+    void saveDataToFile(const std::string& fileName);
 
     Denomination intToDenomination(int value);
 
@@ -43,11 +50,10 @@ public:
 
     void displayBalance();
 
-private:
+    void buyItem(int toPay);
 
-    // The food linked list handling everything related to the menu.
-    LinkedList* coinListAscending;
-    LinkedList* coinListDescending;
+private:
+    std::vector<Coin*>* coinVector;
 };
 
 #endif // COIN_H

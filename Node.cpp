@@ -30,6 +30,14 @@ Price::Price(unsigned int dollars, unsigned int cents) {
     this->cents = cents;
 }
 
+int Price::priceToInt() {
+    int res = 0;
+    res += dollars;
+    res *= 100;
+    res += cents;
+    return res;
+}
+
 std::string Price::displayPrice() {
     // Display dollars and cents. Ensure that the cents are always 2 decimal points
     std::string res = std::to_string(dollars) + "." + (cents < 10? "0" : "") + std::to_string(cents);

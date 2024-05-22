@@ -39,6 +39,9 @@ public:
 
     // Get the price of the product as a string
     std::string displayPrice();
+
+    // Get the price to int
+    int priceToInt();
 };
 
 class FoodItem
@@ -68,7 +71,8 @@ public:
 enum Denomination
 {
     FIVE_CENTS, TEN_CENTS, TWENTY_CENTS, FIFTY_CENTS, ONE_DOLLAR,
-    TWO_DOLLARS, FIVE_DOLLARS, TEN_DOLLARS, TWENTY_DOLLARS, FIFTY_DOLLARS
+    TWO_DOLLARS, FIVE_DOLLARS, TEN_DOLLARS, TWENTY_DOLLARS, FIFTY_DOLLARS,
+    WRONG
 };
 
 // The class representing the coins in our program.
