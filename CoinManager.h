@@ -23,27 +23,31 @@ public:
     //Destructor
     ~CoinManager();
 
-    //Remove a coin from the coinList.
-    void removeQuantityToCoin(Coin* coin, int quantity);
-
-    //Add a coin from the coinList.
-    void addQuantityToCoin(Coin* coin, int quantity);
-
     // Add an item to the food liked list.
     void addBackCoin(Coin* coin);
+
+    void addFront(Coin* coin);
 
     // Load the data from the coin file into the linked list.
     void loadDataFromCoinFile(const std::string& fileName);
 
     Denomination intToDenomination(int value);
 
-    //Return a 2D array representing the necessary change
-    std::vector<std::vector<int>> giveChange(int cents, std::vector<std::vector<int>> availableCoins);
+    int denominationToInt(Denomination value);
+
+    std::string intTabulation(int value, int tab);
+
+    float findValue(int denomination, unsigned int quantity);
+
+    int findSize(int value);
+
+    void displayBalance();
 
 private:
 
     // The food linked list handling everything related to the menu.
-    LinkedList* coinList;
+    LinkedList* coinListAscending;
+    LinkedList* coinListDescending;
 };
 
 #endif // COIN_H
