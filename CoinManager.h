@@ -31,7 +31,7 @@ public:
     void addCoin(Denomination denomination);
 
     // Decrement the count of a coin.
-    void removeCoin(Denomination denomination);
+    void removeCoin(Denomination denomination, int count);
 
     // Load the data from the coin file into the linked list.
     void loadDataFromCoinFile(const std::string& fileName);

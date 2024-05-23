@@ -23,13 +23,13 @@ void CoinManager::addCoin(Denomination denomination) {
     std::cout << "You cannot add this change" << std::endl;
 }
 
-void CoinManager::removeCoin(Denomination denomination)
+void CoinManager::removeCoin(Denomination denomination, int count)
 {
     for (size_t i = 0; i < coinVector->size(); i++) {
         Coin* current_coin = (*coinVector)[i];
         if (current_coin->denom == denomination) {
             if(current_coin->count >= 1) {
-                current_coin->count -= 1;
+                current_coin->count -= count;
             }
             else {
                 std::cout << "You don't have enough of these coins to give back" << std::endl;
@@ -282,7 +282,7 @@ void CoinManager::buyItem(int toPay) {
 
             if(!recolted_change.empty()) {
                 for (size_t i = 0; i < recolted_change.size(); i++) {
-                    removeCoin(recolted_change[i]->denom);
+                    removeCoin(recolted_change[i]->denom, 1);
                 }
             }
 
@@ -322,12 +322,9 @@ void CoinManager::buyItem(int toPay) {
             int coinCount = (*coinVector)[i]->count;
             if (coinValue <= std::abs(toPay) && coinCount > 0) {
                 int numCoinsToUse = std::min(coinCount, std::abs(toPay) / coinValue);
-                (*coinVector)[i]->count -= numCoinsToUse;
                 toPay += numCoinsToUse * coinValue;
 
-                for (int j = 0; j < numCoinsToUse; j++) {
-                    removeCoin(intToDenomination(coinValue));
-                }
+                removeCoin(intToDenomination(coinValue), numCoinsToUse);
 
                 std::cout << "Giving change: " << coinValue << std::endl;
             }
