@@ -329,7 +329,7 @@ void CoinManager::buyItem(int toPay) {
                     removeCoin(intToDenomination(coinValue));
                 }
 
-                std::cout << "Used " << numCoinsToUse << " coins of value " << coinValue << std::endl;
+                std::cout << "Giving change: " << coinValue << std::endl;
             }
         }
     }
