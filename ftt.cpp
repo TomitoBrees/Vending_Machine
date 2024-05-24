@@ -14,27 +14,28 @@ int main(int argc, char **argv)
 {
     /* validate command line arguments */
     // TODO
+    // Validate command line arguments
+    if (argc !=3) {
+        std::cerr << "Error: invalid arguments" << std::endl;
+        return EXIT_FAILURE;
+    }
     // Create an instance of foodManager and CoinManager
     FoodManager* foodManager = new FoodManager();
     CoinManager* coinManager = new CoinManager();
-    // If the user provides 3 arguments to run the program
-    if (argc == 3) {
     // Load data from food file and coins file as specified in arguments
     std::string food_file = std::string(argv[1]);
     std::string coin_file = std::string(argv[2]);
     foodManager->loadDataFromFoodFile(food_file);
     coinManager->loadDataFromCoinFile(coin_file);
-    }
-    else {
-        // Invlaid number of arguments
-        std::cerr << "Error: invalid arguments" << std::endl;
-    }
 
     string s;
     bool quit = false;
+    // Flag that detects EOF
+    bool eofDetected = false;
 
     // Loop for main menu
     while (!quit) {
+        while (!eofDetected) {
         // Display main menu
         std::cout << "Main Menu:" << std::endl;
         std::cout << "\t1. Display Meal Options" << std::endl;
@@ -49,6 +50,14 @@ int main(int argc, char **argv)
         // Read input (s) from user
         std::cin >> s;
 
+        // Check if EOF is reached
+        if (std::cin.eof()) {
+            // Set quit flag to exit the loop, set EOF flag to true
+            quit = true;
+            eofDetected = true;
+        }
+
+        if (!eofDetected) {
         if (s == "1") {
             std::cout << std::endl;
             foodManager->displayList();
@@ -58,6 +67,7 @@ int main(int argc, char **argv)
             std::cout << "Purchase Meal" << std::endl;
             std::cout << "-------------" << std::endl;
             std::cout << "Please enter the ID of the food you want to purchase: ";
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::string foodID;
             std::cin >> foodID;
 
@@ -92,33 +102,35 @@ int main(int argc, char **argv)
             std::string name, description;
             int price;
             std::cout << "Enter the item name: ";
-            std::cin.ignore();
-            std::getline(std::cin, name);
-            std::cout << "Enter the food description: ";
-            std::getline(std::cin, description);
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            if (std::getline(std::cin, name)) {
+                std::cout << "Enter the food description: ";
+                if (std::getline(std::cin, description)) {
 
             // Add new price if the user enters a valid integer
-            bool validInput;
+            bool validPriceInput = false;
             do {
             std::cout << "Enter the price for this item (in cents): ";
             std::cin >> price;
-            validInput = !std::cin.fail();
-            if (!validInput) {
+            validPriceInput = !std::cin.fail();
+            if (!validPriceInput) {
                 // Clear the error flag on cin
                 std::cin.clear();
                 // Ignore the rest of the input until a newline
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "Invalid price. Please enter a valid price in cents." << std::endl;
               }
-            } while (!validInput);
+            } while (!validPriceInput);
             
             // Add the new food item to the linked list
             foodManager->addNewFoodItem(name, description, price);
             std::cout << "This item " << "'" << name << " - " << description << ".' has now been added to the food menu." << std::endl;
+           }
+          }
         }
         else if (s == "5") {
             std::cout << "Enter the food id of the food to remove from the menu: ";
-
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::string idToRemove;
             std::cin >> idToRemove;
 
@@ -142,12 +154,18 @@ int main(int argc, char **argv)
             quit = true;
             delete foodManager;
             delete coinManager;
+            break;
         }
         else {
             std::cout << "Invalid input. Please enter a valid option." << std::endl;
         }
-    }
-    
+       }
+       else {
+        // Handle EOF being detected, exit the loop
+        std::cerr << "End of input reached. Exiting..." << std::endl;
+        quit = true;
+       }
+      }
+    } 
     return EXIT_SUCCESS;
 }
-
