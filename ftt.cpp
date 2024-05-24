@@ -64,6 +64,9 @@ int main(int argc, char **argv)
             std::cout << std::endl;
         }
         else if (s == "2") {
+            bool validIdEntered = false;
+            bool cancelPurchase = false;
+            while (!validIdEntered && !cancelPurchase) {
             std::cout << "Purchase Meal" << std::endl;
             std::cout << "-------------" << std::endl;
             std::cout << "Please enter the ID of the food you want to purchase: ";
@@ -80,11 +83,19 @@ int main(int argc, char **argv)
                 std::cout << "Please hand over the money - type in the value of each note/coin in cents." << std::endl;
                 std::cout << "Please enter ctrl-D or enter on a new line to cancel this purchase." << std::endl;
                 coinManager->buyItem(desiredItem->price->priceToInt());
+
+                // Check for EOF or empty line to cancel the purchase
+                if (std::cin.eof() || foodID.empty()) {
+                    cancelPurchase = true;
+                }
+                // Set validIdEntered to true to exit the loop if not cancelled
+                validIdEntered = !cancelPurchase;
             }
             else {
                 // Display error message if the input entered is not valid or does not exist in the linked list
                 std::cout << "Error: Invalid input. Please enter a valid ID (e.g. F0001)." << std::endl;
             }
+          }
         }
         else if (s == "3") {
             foodManager->saveDataToFile("new_food.dat");
