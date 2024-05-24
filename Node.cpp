@@ -13,15 +13,11 @@ Node::Node(void* data, NodeType type) {
 }
 
 Node::~Node(){
-    switch(type) {
-        case FOOD_ITEM:
-            delete static_cast<FoodItem*>(data);
-            break;
-        case COIN:
-            delete static_cast<Coin*>(data);
-            break;
-        default:
-            break;
+    if (type == FOOD_ITEM) {
+        delete static_cast<FoodItem*>(data);
+    }
+    else if (type == COIN) {
+        delete static_cast<Coin*>(data);
     }
 }
 

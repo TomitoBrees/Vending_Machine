@@ -100,8 +100,6 @@ int main(int argc, char **argv)
         else if (s == "3") {
             foodManager->saveDataToFile("new_food.dat");
             coinManager->saveDataToFile("new_coin.dat");
-            delete foodManager;
-            delete coinManager;
             return EXIT_SUCCESS;
         }
         else if (s == "4") {
@@ -163,9 +161,7 @@ int main(int argc, char **argv)
         }
         else if (s == "7") {
             quit = true;
-            delete foodManager;
-            delete coinManager;
-            break;
+            return EXIT_SUCCESS;
         }
         else {
             std::cout << "Invalid input. Please enter a valid option." << std::endl;

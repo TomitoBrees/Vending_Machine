@@ -7,7 +7,10 @@ CoinManager::CoinManager() {
 }
 
 CoinManager::~CoinManager() {
-
+    // Deallocate memory for each Coin object, then the vector
+    for (Coin* coin : *coinVector) {
+        delete coin;
+    }
     delete coinVector;
 }
 

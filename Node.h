@@ -105,7 +105,7 @@ public:
     // Constructor for food menu nodes
     Node(void *data, NodeType type);
 
-    ~Node();
+    virtual ~Node();
     
     // pointer to the data head for the FoodItem node
     void* data;

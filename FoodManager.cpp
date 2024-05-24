@@ -5,6 +5,13 @@ FoodManager::FoodManager() {
 }
 
 FoodManager::~FoodManager() {
+    Node* current = foodList->head;
+    // Deallocate memory for each FoodItem object, then the list
+    while(current) {
+        FoodItem* foodItem = static_cast<FoodItem*>(current->data);
+        delete foodItem;
+        current = current->next;
+    }
     delete foodList;
 }
 

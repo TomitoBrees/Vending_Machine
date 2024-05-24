@@ -12,6 +12,13 @@ LinkedList::~LinkedList() {
     while (current) {
         Node* temp = current;
         current = current->next;
+        // Check the type of node and delete the data
+        if (temp->type == FOOD_ITEM) {
+            delete static_cast<FoodItem*>(temp->data);
+        }
+        else if (temp->type == COIN) {
+            delete static_cast<Coin*>(temp->data);
+        }
         delete temp;
     }
 }
