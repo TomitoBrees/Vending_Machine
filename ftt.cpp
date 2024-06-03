@@ -1,8 +1,17 @@
 #include <iostream>
 #include <limits>
+#include <vector>
+#include <functional>
 #include "LinkedList.h"
 #include "FoodManager.h"
 #include "CoinManager.h"
+#include "DisplayFoodCommand.h"
+#include "PurchasingCommand.h"
+#include "SaveAndExitCommand.h"
+#include "AddNewFoodItemCommand.h"
+#include "RemoveFoodItemCommand.h"
+#include "DisplayCoinsCommand.h"
+#include "AbortCommand.h"
 
 using std::string;
 /**
@@ -28,14 +37,20 @@ int main(int argc, char **argv)
     foodManager->loadDataFromFoodFile(food_file);
     coinManager->loadDataFromCoinFile(coin_file);
 
-    string s;
     bool quit = false;
-    // Flag that detects EOF
-    bool eofDetected = false;
+    // Create instances of the concrete Command classes and store them in a map
+    std::vector<std::function<void()>> commands = {
+        [&foodManager]() { DisplayFoodCommand(foodManager).execute(); },
+        [&foodManager, &coinManager]() { PurchasingCommand(foodManager, coinManager).execute(); },
+        [&foodManager, &coinManager]() { SaveAndExitCommand(foodManager, coinManager).execute(); },
+        [&foodManager, &coinManager]() { AddNewFoodItemCommand(foodManager, coinManager).execute(); },
+        [&foodManager]() { RemoveFoodItemCommand(foodManager).execute(); },
+        [&coinManager]() { DisplayCoinsCommand(coinManager).execute(); },
+        [&foodManager, &coinManager]() { AbortCommand(foodManager, coinManager).execute(); }
+    };
 
     // Loop for main menu
     while (!quit) {
-        while (!eofDetected) {
         // Display main menu
         std::cout << "Main Menu:" << std::endl;
         std::cout << "\t1. Display Meal Options" << std::endl;
@@ -46,133 +61,29 @@ int main(int argc, char **argv)
         std::cout << "\t5. Remove Food" << std::endl;
         std::cout << "\t6. Display Balance" << std::endl;
         std::cout << "\t7. Abort Program" << std::endl;
-        std::cout << "Select your option (1-7) : " ;
-        // Read input (s) from user
-        std::cin >> s;
+        std::cout << "Select your option (1-7): " ;
+        // Read input (option) from user
+        int option;
+        std::cin >> option;
 
         // Check if EOF is reached
         if (std::cin.eof()) {
             // Set quit flag to exit the loop, set EOF flag to true
             quit = true;
-            eofDetected = true;
-        }
 
-        if (!eofDetected) {
-        if (s == "1") {
-            std::cout << std::endl;
-            foodManager->displayList();
-            std::cout << std::endl;
         }
-        else if (s == "2") {
-            bool validIdEntered = false;
-            bool cancelPurchase = false;
-            while (!validIdEntered && !cancelPurchase) {
-            std::cout << "Purchase Meal" << std::endl;
-            std::cout << "-------------" << std::endl;
-            std::cout << "Please enter the ID of the food you want to purchase: ";
+        // Handle any invalid input from the user
+        if (std::cin.fail() || option < 1 || option > 7) {
+            std::cerr << "Invalid input. Please enter one of the valid options (1-7)." << std::endl;
+            std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::string foodID;
-            std::cin >> foodID;
-
-            // Find the food item in the linked list
-            FoodItem* desiredItem = foodManager->findFoodItemByID(foodID);
-            if (desiredItem) {
-                // Find the food item and display the details
-                std::cout << "You have selected " << "'" << desiredItem->name << " - " << desiredItem->description << "'. "
-                          << "This will cost you $ " << desiredItem->price->displayPrice() << std::endl;
-                std::cout << "Please hand over the money - type in the value of each note/coin in cents." << std::endl;
-                std::cout << "Please enter ctrl-D or enter on a new line to cancel this purchase." << std::endl;
-                coinManager->buyItem(desiredItem->price->priceToInt());
-
-                // Check for EOF or empty line to cancel the purchase
-                if (std::cin.eof() || foodID.empty()) {
-                    cancelPurchase = true;
-                }
-                // Set validIdEntered to true to exit the loop if not cancelled
-                validIdEntered = !cancelPurchase;
-            }
-            else {
-                // Display error message if the input entered is not valid or does not exist in the linked list
-                std::cout << "Error: Invalid input. Please enter a valid ID (e.g. F0001)." << std::endl;
-            }
-          }
-        }
-        else if (s == "3") {
-            foodManager->saveDataToFile("new_food.dat");
-            coinManager->saveDataToFile("new_coin.dat");
-            return EXIT_SUCCESS;
-        }
-        else if (s == "4") {
-            // Determine the next available id and print it
-            std::string nextID = foodManager->generateNextID();
-            std::cout << "This new meal item will have the item id of " << nextID << std::endl;
-
-            // Prompt the user for the name, description
-            std::string name, description;
-            int price;
-            std::cout << "Enter the item name: ";
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            if (std::getline(std::cin, name)) {
-                std::cout << "Enter the food description: ";
-                if (std::getline(std::cin, description)) {
-
-            // Add new price if the user enters a valid integer
-            bool validPriceInput = false;
-            do {
-            std::cout << "Enter the price for this item (in cents): ";
-            std::cin >> price;
-            validPriceInput = !std::cin.fail();
-            if (!validPriceInput) {
-                // Clear the error flag on cin
-                std::cin.clear();
-                // Ignore the rest of the input until a newline
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Invalid price. Please enter a valid price in cents." << std::endl;
-              }
-            } while (!validPriceInput);
-            
-            // Add the new food item to the linked list
-            foodManager->addNewFoodItem(name, description, price);
-            std::cout << "This item " << "'" << name << " - " << description << ".' has now been added to the food menu." << std::endl;
-           }
-          }
-        }
-        else if (s == "5") {
-            std::cout << "Enter the food id of the food to remove from the menu: ";
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::string idToRemove;
-            std::cin >> idToRemove;
-
-            // Find the food item in the linked list
-            FoodItem* itemToRemove = foodManager->findFoodItemByID(idToRemove);
-
-            if (itemToRemove) {
-                // If the food item with the entered id exists, remove the food item
-                foodManager->removeMenuItem(itemToRemove);
-            }
-            else {
-                std::cout << "Food item with id " << idToRemove << " not found." << std::endl;
-            }
-        }
-        else if (s == "6") {
-            std::cout << std::endl;
-            coinManager->displayBalance();
-            std::cout << std::endl;
-        }
-        else if (s == "7") {
-            quit = true;
-            return EXIT_SUCCESS;
         }
         else {
-            std::cout << "Invalid input. Please enter a valid option." << std::endl;
-        }
-       }
-       else {
-        // Handle EOF being detected, exit the loop
-        std::cerr << "End of input reached. Exiting..." << std::endl;
-        quit = true;
-       }
+            // Call the concrete Command classes in the vector from user input
+            commands[option - 1]();
       }
-    } 
+    }
+    delete foodManager;
+    delete coinManager; 
     return EXIT_SUCCESS;
 }
